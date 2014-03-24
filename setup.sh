@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Make sure we are in the spark-ec2 directory
-cd /root/spark-ec2
+cd /opt/spark-ec2
 
 # Load the environment variables specific to this AMI
 source /root/.bash_profile
@@ -11,11 +11,11 @@ source ec2-variables.sh
 
 # Set hostname based on EC2 private DNS name, so that it is set correctly
 # even if the instance is restarted with a different private DNS name
-PRIVATE_DNS=`wget -q -O - http://instance-data.ec2.internal/latest/meta-data/local-hostname`
-PUBLIC_DNS=`wget -q -O - http://instance-data.ec2.internal/latest/meta-data/hostname`
-hostname $PRIVATE_DNS
-echo $PRIVATE_DNS > /etc/hostname
-export HOSTNAME=$PRIVATE_DNS  # Fix the bash built-in hostname variable too
+#PRIVATE_DNS=`wget -q -O - http://instance-data.ec2.internal/latest/meta-data/local-hostname`
+#PUBLIC_DNS=`wget -q -O - http://instance-data.ec2.internal/latest/meta-data/hostname`
+#hostname $PRIVATE_DNS
+#echo $PRIVATE_DNS > /etc/hostname
+#export HOSTNAME=$PRIVATE_DNS  # Fix the bash built-in hostname variable too
 
 echo "Setting up Spark on `hostname`..."
 
@@ -24,9 +24,9 @@ echo "$MESOS_MASTERS" > masters
 echo "$MESOS_SLAVES" > slaves
 
 # TODO(shivaram): Clean this up after docs have been updated ?
-# This ensures /root/mesos-ec2/copy-dir still works
-cp -f slaves /root/mesos-ec2/
-cp -f masters /root/mesos-ec2/
+# This ensures /opt/mesos-ec2/copy-dir still works
+cp -f slaves /opt/mesos-ec2/
+cp -f masters /opt/mesos-ec2/
 
 MASTERS=`cat masters`
 NUM_MASTERS=`cat masters | wc -l`
@@ -89,10 +89,10 @@ while [ "e$TODO" != "e" ] && [ $TRIES -lt 4 ] ; do
   fi
 done
 
-echo "RSYNC'ing /root/spark-ec2 to other cluster nodes..."
+echo "RSYNC'ing /opt/spark-ec2 to other cluster nodes..."
 for node in $SLAVES $OTHER_MASTERS; do
   echo $node
-  rsync -e "ssh $SSH_OPTS" -az /root/spark-ec2 $node:/root &
+  rsync -e "ssh $SSH_OPTS" -az /opt/spark-ec2 $node:/opt &
   scp $SSH_OPTS ~/.ssh/id_rsa $node:.ssh &
   sleep 0.3
 done
@@ -112,7 +112,7 @@ wait
 ./mesos/compute_cluster_url.py > ./cluster-url
 export MESOS_CLUSTER_URL=`cat ./cluster-url`
 # TODO(shivaram): Clean this up after docs have been updated ?
-cp -f cluster-url /root/mesos-ec2/
+cp -f cluster-url /opt/mesos-ec2/
 
 # Install / Init module before templates if required
 for module in $MODULES; do
@@ -129,8 +129,8 @@ echo "Creating local config files..."
 
 # Copy spark conf by default
 echo "Deploying Spark config files..."
-chmod u+x /root/spark/conf/spark-env.sh
-/root/spark-ec2/copy-dir /root/spark/conf
+chmod u+x /opt/spark/conf/spark-env.sh
+/opt/spark-ec2/copy-dir /opt/spark/conf
 
 # Setup each module
 for module in $MODULES; do

@@ -1,16 +1,16 @@
 #!/bin/bash
 
 # Make sure we are in the spark-ec2 directory
-cd /root/spark-ec2
+cd /opt/spark-ec2
 
 source ec2-variables.sh
 
 # Set hostname based on EC2 private DNS name, so that it is set correctly
 # even if the instance is restarted with a different private DNS name
-PRIVATE_DNS=`wget -q -O - http://instance-data.ec2.internal/latest/meta-data/local-hostname`
-hostname $PRIVATE_DNS
-echo $PRIVATE_DNS > /etc/hostname
-HOSTNAME=$PRIVATE_DNS  # Fix the bash built-in hostname variable too
+#PRIVATE_DNS=`wget -q -O - http://instance-data.ec2.internal/latest/meta-data/local-hostname`
+#hostname $PRIVATE_DNS
+#echo $PRIVATE_DNS > /etc/hostname
+#HOSTNAME=$PRIVATE_DNS  # Fix the bash built-in hostname variable too
 
 echo "Setting up slave on `hostname`..."
 
@@ -72,7 +72,7 @@ chmod -R a+w /mnt*
 rm -f /root/.ssh/known_hosts
 
 # Create swap space on /mnt
-/root/spark-ec2/create-swap.sh $SWAP_MB
+/opt/spark-ec2/create-swap.sh $SWAP_MB
 
 # Allow memory to be over committed. Helps in pyspark where we fork
 echo 1 > /proc/sys/vm/overcommit_memory

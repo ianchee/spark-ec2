@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set HADOOP_HOME variable to allow slaves to get executors from HDFS
-export HADOOP_HOME=/root/ephemeral-hdfs
+export HADOOP_HOME=/opt/ephemeral-hdfs
 
 export MESOS_PUBLIC_DNS=`curl http://169.254.169.254/latest/meta-data/public-hostname`
 
@@ -18,7 +18,7 @@ echo "Starting mesos slave on `hostname`"
 
 
 nohup mesos-slave \
-  --master=zk://`cat /root/spark-ec2/masters`:2181/mesos \
+  --master=zk://`cat /opt/spark-ec2/masters`:2181/mesos \
   --resources="cpus:$CPUS;mem:$MEM" \
   --work_dir=/mnt/mesos-work \
   --log_dir=/mnt/mesos-logs \

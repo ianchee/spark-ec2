@@ -8,6 +8,6 @@ killall mesos-master
 # ec2-variables.sh, so set it to * before running mesos-master
 
 MESOS_SLAVES="*" nohup mesos-master \
-  --zk=zk://`cat /root/spark-ec2/masters`:2181/mesos \
+  --zk=zk://`cat /opt/spark-ec2/masters`:2181/mesos \
   --log_dir=/mnt/mesos-logs \
   < /dev/null >/mnt/mesos-logs/mesos-master.out 2>&1 &
