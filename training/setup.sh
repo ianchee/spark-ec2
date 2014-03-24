@@ -68,15 +68,15 @@ popd
 pushd /opt
 echo "Copying Hadoop executor for Mesos"
 tar czf /mnt/ephemeral-hdfs.tar.gz ephemeral-hdfs
-~/ephemeral-hdfs/bin/hadoop fs -put /mnt/ephemeral-hdfs.tar.gz /
+/opt/ephemeral-hdfs/bin/hadoop fs -put /mnt/ephemeral-hdfs.tar.gz /
 echo "Copying Spark executor for Mesos"
 tar czf /mnt/spark.tar.gz spark
-~/ephemeral-hdfs/bin/hadoop fs -put /mnt/spark.tar.gz /
+/opt/ephemeral-hdfs/bin/hadoop fs -put /mnt/spark.tar.gz /
 rm /mnt/spark.tar.gz
 rm /mnt/ephemeral-hdfs.tar.gz
 popd
 
 #echo "Starting Hadoop Job tracker on Mesos"
-#nohup ~/ephemeral-hdfs/bin/hadoop jobtracker 2>&1 >/mnt/job-tracker.out &
+#nohup /opt/ephemeral-hdfs/bin/hadoop jobtracker 2>&1 >/mnt/job-tracker.out &
 
 popd
